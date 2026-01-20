@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h3 class="m-0">المعدات</h3>
+  <form class="d-flex gap-2" method="get" action="/equipment">
+    <input class="form-control" name="q" placeholder="بحث بالاسم أو الكود أو السيريال" value="{{ q }}">
+    <button class="btn btn-outline-dark">بحث</button>
+  </form>
+</div>
+
+<div class="card shadow-sm mb-4">
+  <div class="card-body">
+    <h5 class="mb-3">إضافة معدة</h5>
+    <form method="post" action="/equipment/create" class="row g-2">
+      <div class="col-md-4">
+        <label class="form-label">اسم المعدة</label>
+        <input class="form-control" name="name" required>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">الفئة</label>
+        <input class="form-control" name="category">
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">الرقم التسلسلي</label>
+        <input class="form-control" name="serial_number">
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">رقم الأصل</label>
+        <input class="form-control" name="asset_number">
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">الحالة</label>
+        <select class="form-select" name="status">
+          <option>جاهزة</option>
+          <option>قيد التشغيل</option>
+          <option>تحت الصيانة</option>
+          <option>مؤجرة</option>
+          <option>تالفة</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">الرف (اختياري)</label>
+        <select class="form-select" name="shelf_id">
+          <option value="">—</option>
+          {% for s in shelves %}
+          <option value="{{ s.id }}">{{ s.code }} ({{ s.warehouse.name }})</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-8">
+        <label class="form-label">ملاحظات (اختياري)</label>
+        <input class="form-control" name="notes">
+      </div>
+      <div class="col-12">
+        <button class="btn btn-dark">حفظ</button>
+      </div>
+      <p class="text-muted small mb-0">ملاحظة: يتم توليد كود المعدة تلقائيًا مثل EQ-000001</p>
+    </form>
+  </div>
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <h5 class="mb-3">قائمة المعدات</h5>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead>
+          <tr>
+            <th>الكود</th>
+            <th>الاسم</th>
+            <th>الحالة</th>
+            <th>المستودع/الرف</th>
+            <th class="text-end">إجراءات</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for e in items %}
+          <tr>
+            <td class="fw-semibold">{{ e.code }}</td>
+            <td>{{ e.name }}</td>
+            <td><span class="badge text-bg-secondary">{{ e.status }}</span></td>
+            <td>
+              {% if e.shelf %}
+                {{ e.shelf.warehouse.code }} / {{ e.shelf.code }}
+              {% else %}
+                —
+              {% endif %}
+            </td>
+            <td class="text-end">
+              <form method="post" action="/equipment/{{ e.id }}/delete" onsubmit="return confirm('حذف المعدة؟');" style="display:inline">
+                <button class="btn btn-sm btn-outline-danger">حذف</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+          {% if items|length == 0 %}
+          <tr><td colspan="5" class="text-center text-muted py-4">لا توجد بيانات</td></tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<h3 class="mb-3">الأرفف</h3>
+
+<div class="card shadow-sm mb-4">
+  <div class="card-body">
+    <h5 class="mb-3">إضافة رف</h5>
+    <form method="post" action="/shelves/create" class="row g-2">
+      <div class="col-md-3">
+        <label class="form-label">المستودع</label>
+        <select class="form-select" name="warehouse_id" required>
+          {% for w in warehouses %}
+          <option value="{{ w.id }}">{{ w.code }} - {{ w.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">كود الرف</label>
+        <input class="form-control" name="code" placeholder="WH1-R01-S01" required>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">وصف (اختياري)</label>
+        <input class="form-control" name="description">
+      </div>
+      <div class="col-12">
+        <button class="btn btn-dark">حفظ</button>
+      </div>
+      <p class="text-muted small mb-0">نصيحة: التزم بصيغة كود موحّدة لتسهيل الجرد والبحث.</p>
+    </form>
+  </div>
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <h5 class="mb-3">قائمة الأرفف</h5>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead><tr><th>المستودع</th><th>كود الرف</th><th>الوصف</th></tr></thead>
+        <tbody>
+          {% for s in items %}
+          <tr><td>{{ s.warehouse.code }}</td><td class="fw-semibold">{{ s.code }}</td><td>{{ s.description or "—" }}</td></tr>
+          {% endfor %}
+          {% if items|length == 0 %}
+          <tr><td colspan="3" class="text-center text-muted py-4">لا توجد بيانات</td></tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

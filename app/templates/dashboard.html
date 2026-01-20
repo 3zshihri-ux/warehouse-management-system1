@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h3 class="m-0">لوحة التحكم</h3>
+  <span class="badge text-bg-secondary">المستخدم: {{ user.email }}</span>
+</div>
+
+<div class="row g-3">
+  <div class="col-md-4"><div class="card shadow-sm"><div class="card-body"><div class="h6 text-muted">إجمالي المعدات</div><div class="display-6">{{ counts.total_equipment }}</div></div></div></div>
+  <div class="col-md-4"><div class="card shadow-sm"><div class="card-body"><div class="h6 text-muted">جاهزة</div><div class="display-6">{{ counts.ready }}</div></div></div></div>
+  <div class="col-md-4"><div class="card shadow-sm"><div class="card-body"><div class="h6 text-muted">مؤجرة</div><div class="display-6">{{ counts.rented }}</div></div></div></div>
+  <div class="col-md-4"><div class="card shadow-sm"><div class="card-body"><div class="h6 text-muted">تحت الصيانة</div><div class="display-6">{{ counts.maintenance }}</div></div></div></div>
+  <div class="col-md-4"><div class="card shadow-sm"><div class="card-body"><div class="h6 text-muted">عدد المستودعات</div><div class="display-6">{{ counts.warehouses }}</div></div></div></div>
+  <div class="col-md-4"><div class="card shadow-sm"><div class="card-body"><div class="h6 text-muted">عدد الأرفف</div><div class="display-6">{{ counts.shelves }}</div></div></div></div>
+</div>
+
+<div class="alert alert-warning mt-4">
+  هذه نسخة MVP (أساسية). يمكننا إضافة: التأجير بعقود، الإهلاك، الصيانة المتقدمة، الجرد بالباركود/QR، تقارير PDF، وصلاحيات تفصيلية.
+</div>
+{% endblock %}

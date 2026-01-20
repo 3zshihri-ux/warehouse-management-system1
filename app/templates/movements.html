@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block content %}
+<h3 class="mb-3">الحركات (صرف/تسليم/استلام/تأجير/نقل)</h3>
+
+<div class="card shadow-sm mb-4">
+  <div class="card-body">
+    <h5 class="mb-3">إضافة حركة</h5>
+    <form method="post" action="/movements/create" class="row g-2">
+      <div class="col-md-4">
+        <label class="form-label">المعدة</label>
+        <select class="form-select" name="equipment_id" required>
+          {% for e in equipment %}
+          <option value="{{ e.id }}">{{ e.code }} - {{ e.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">نوع الحركة</label>
+        <select class="form-select" name="type" required>
+          <option>صرف</option>
+          <option>تسليم</option>
+          <option>استلام</option>
+          <option>تأجير</option>
+          <option>إرجاع</option>
+          <option>نقل</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">المستلم/العميل (اختياري)</label>
+        <input class="form-control" name="to_person">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">المشروع (اختياري)</label>
+        <input class="form-control" name="project">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">من رف (اختياري)</label>
+        <input class="form-control" name="from_shelf" placeholder="WH1-R01-S01">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">إلى رف (اختياري)</label>
+        <input class="form-control" name="to_shelf" placeholder="WH1-R02-S03">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">ملاحظات (اختياري)</label>
+        <input class="form-control" name="notes">
+      </div>
+      <div class="col-12">
+        <button class="btn btn-dark">حفظ</button>
+      </div>
+      <p class="text-muted small mb-0">ملاحظة: عند إدخال "إلى رف" مطابق لكود رف موجود، يتم تحديث موقع المعدة تلقائيًا.</p>
+    </form>
+  </div>
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <h5 class="mb-3">آخر 200 حركة</h5>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead><tr><th>التاريخ</th><th>المعدة</th><th>النوع</th><th>المستلم/العميل</th><th>المشروع</th><th>من</th><th>إلى</th></tr></thead>
+        <tbody>
+          {% for m in items %}
+          <tr>
+            <td class="text-muted">{{ m.created_at.strftime("%Y-%m-%d %H:%M") }}</td>
+            <td class="fw-semibold">{{ m.equipment.code }}</td>
+            <td><span class="badge text-bg-secondary">{{ m.type }}</span></td>
+            <td>{{ m.to_person or "—" }}</td>
+            <td>{{ m.project or "—" }}</td>
+            <td>{{ m.from_shelf or "—" }}</td>
+            <td>{{ m.to_shelf or "—" }}</td>
+          </tr>
+          {% endfor %}
+          {% if items|length == 0 %}
+          <tr><td colspan="7" class="text-center text-muted py-4">لا توجد بيانات</td></tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
